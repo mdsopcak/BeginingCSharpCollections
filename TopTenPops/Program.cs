@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace TopTenPops
+namespace ReadAllCountries
 {
     class Program
     {
@@ -12,13 +12,17 @@ namespace TopTenPops
         {
             string filePath = @"C:\Users\marks\source\repos\BeginingCSharpCollections\TopTenPops\Pop by Largest Final.csv";
             CsvReader reader = new CsvReader(filePath);
+            Dictionary<string, Country> countries = reader.ReadAllCountries();
 
-            Country[] countries = reader.ReadFirstNCountries(10);
+            Console.WriteLine("Which country code do you want to look up? ");
+            string userInput = Console.ReadLine();
 
-            foreach (Country country in countries)
-            {
-                Console.WriteLine($"{PopulationFormatter.FormatPopulation (country.Population).PadLeft(15)}: {country.Name}");
-            }
+            bool gotCountry = countries.TryGetValue(userInput, out Country country);
+            if (!gotCountry)
+                Console.WriteLine($"Sorry, there is no country with code, {userInput}");
+            else
+                Console.WriteLine($"{country.Name} has population {PopulationFormatter.FormatPopulation(country.Population)}");
+
             Console.ReadLine();
         }
     }
